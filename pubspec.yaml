@@ -12,8 +12,6 @@ dependencies:
   video_player: ^2.9.2
   just_audio: ^0.9.42
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
   flutter_launcher_icons: "^0.14.1"
 flutter:
   uses-material-design: true
