@@ -22,14 +22,37 @@ jobs:
         with:
           channel: 'stable'
           
+      # 1. Bikin folder Android otomatis
       - name: Create Android Folder
         run: flutter create . --platforms android
         
+      # 2. OTOMATIS GANTI NAMA PAKET & NAMA APLIKASI
+      - name: Fix Package & App Name
+        run: |
+          sed -i 's/com.example.chatglobal/Com.ChatGlobal.byAmar/g' android/app/build.gradle.kts
+          sed -i 's/com.example.chatglobal/Com.ChatGlobal.byAmar/g' android/app/build.gradle
+          sed -i 's/com.example.chatglobal/Com.ChatGlobal.byAmar/g' android/app/src/main/AndroidManifest.xml
+          sed -i 's/android:label="chatglobal"/android:label="ChatGlobal V1"/g' android/app/src/main/AndroidManifest.xml
+          
+          mkdir -p android/app/src/main/kotlin/Com/ChatGlobal/byAmar
+          sed 's/package com.example.chatglobal/package Com.ChatGlobal.byAmar/g' android/app/src/main/kotlin/com/example/chatglobal/MainActivity.kt > android/app/src/main/kotlin/Com/ChatGlobal/byAmar/MainActivity.kt
+          rm android/app/src/main/kotlin/com/example/chatglobal/MainActivity.kt
+
       - name: Move google-services.json
         run: cp google-services.json android/app/
-        
+
+      # 3. OTOMATIS DOWNLOAD ICON DARI CATBOX
+      - name: Download Icon
+        run: |
+          mkdir -p assets
+          curl -L "https://files.catbox.moe/lpj1jd.png" -o assets/icon.png
+          
       - name: Get Dependencies
         run: flutter pub get
+        
+      # 4. OTOMATIS GENERATE ICON
+      - name: Generate App Icon
+        run: dart run flutter_launcher_icons
         
       - name: Build APK
         run: flutter build apk --release
