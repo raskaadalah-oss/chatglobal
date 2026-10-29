@@ -8,7 +8,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 20 # Biar gak nyangkut sejam lagi
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       
@@ -22,21 +22,22 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-          cache: true # Ngebantu biar build selanjutnya lebih cepat
+          cache: true
           
       - name: Create Android Folder
         run: flutter create . --platforms android
         
       - name: Fix Package & App Name
         run: |
-          sed -i 's/com.example.chatglobal/Com.ChatGlobal.byAmar/g' android/app/build.gradle.kts || true
-          sed -i 's/com.example.chatglobal/Com.ChatGlobal.byAmar/g' android/app/build.gradle || true
-          sed -i 's/com.example.chatglobal/Com.ChatGlobal.byAmar/g' android/app/src/main/AndroidManifest.xml
-          sed -i 's/android:label="chatglobal"/android:label="ChatGlobal V1"/g' android/app/src/main/AndroidManifest.xml
+          # Pake find biar lebih aman dan gak error kalau foldernya beda
+          find . -type f -name "*.gradle*" -exec sed -i 's/com.example.chatglobal/Com.ChatGlobal.byAmar/g' {} +
+          find . -type f -name "AndroidManifest.xml" -exec sed -i 's/com.example.chatglobal/Com.ChatGlobal.byAmar/g' {} +
+          find . -type f -name "AndroidManifest.xml" -exec sed -i 's/android:label="chatglobal"/android:label="ChatGlobal V1"/g' {} +
           
+          # Pindahin MainActivity.kt ke folder yang bener
           mkdir -p android/app/src/main/kotlin/Com/ChatGlobal/byAmar
-          sed 's/package com.example.chatglobal/package Com.ChatGlobal.byAmar/g' android/app/src/main/kotlin/com/example/chatglobal/MainActivity.kt > android/app/src/main/kotlin/Com/ChatGlobal/byAmar/MainActivity.kt
-          rm android/app/src/main/kotlin/com/example/chatglobal/MainActivity.kt
+          find . -type f -name "MainActivity.kt" -exec sed -i 's/package com.example.chatglobal/package Com.ChatGlobal.byAmar/g' {} +
+          find . -type f -name "MainActivity.kt" -exec mv {} android/app/src/main/kotlin/Com/ChatGlobal/byAmar/MainActivity.kt \;
 
       - name: Move google-services.json
         run: cp google-services.json android/app/
