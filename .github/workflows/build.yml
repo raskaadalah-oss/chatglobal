@@ -29,15 +29,13 @@ jobs:
         
       - name: Fix Package & App Name
         run: |
-          # Pake find biar lebih aman dan gak error kalau foldernya beda
-          find . -type f -name "*.gradle*" -exec sed -i 's/com.example.chatglobal/Com.ChatGlobal.byAmar/g' {} +
-          find . -type f -name "AndroidManifest.xml" -exec sed -i 's/com.example.chatglobal/Com.ChatGlobal.byAmar/g' {} +
-          find . -type f -name "AndroidManifest.xml" -exec sed -i 's/android:label="chatglobal"/android:label="ChatGlobal V1"/g' {} +
+          grep -rl "com.example.chatglobal" android/ | xargs sed -i 's/com.example.chatglobal/Com.ChatGlobal.byAmar/g'
+          grep -rl 'android:label="chatglobal"' android/ | xargs sed -i 's/android:label="chatglobal"/android:label="ChatGlobal V1"/g'
           
-          # Pindahin MainActivity.kt ke folder yang bener
           mkdir -p android/app/src/main/kotlin/Com/ChatGlobal/byAmar
-          find . -type f -name "MainActivity.kt" -exec sed -i 's/package com.example.chatglobal/package Com.ChatGlobal.byAmar/g' {} +
-          find . -type f -name "MainActivity.kt" -exec mv {} android/app/src/main/kotlin/Com/ChatGlobal/byAmar/MainActivity.kt \;
+          mv android/app/src/main/kotlin/com/example/chatglobal/MainActivity.kt android/app/src/main/kotlin/Com/ChatGlobal/byAmar/MainActivity.kt
+          sed -i 's/package com.example.chatglobal/package Com.ChatGlobal.byAmar/g' android/app/src/main/kotlin/Com/ChatGlobal/byAmar/MainActivity.kt
+          rm -rf android/app/src/main/kotlin/com
 
       - name: Move google-services.json
         run: cp google-services.json android/app/
