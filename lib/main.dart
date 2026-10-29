@@ -3,9 +3,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:video_player/video_player.dart';
 import 'package:just_audio/just_audio.dart';
+import 'dart:async'; // WAJIB BUAT TIMER
 
-// ⚠️ GANTI BAGIAN INI KALAU NAMA PACKAGE LU BEDA
-import 'package:chatglobal/firebase_options.dart'; 
+import 'firebase_options.dart'; 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -55,10 +55,7 @@ class LoginScreen extends StatelessWidget {
                 child: const Text('LOGIN', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
               ),
               const Spacer(),
-              const Text(
-                'Dev AmarAfterDark',
-                style: TextStyle(fontFamily: 'ShareTechMono', color: Colors.grey, fontSize: 12, letterSpacing: 2),
-              ),
+              const Text('Dev AmarAfterDark', style: TextStyle(fontFamily: 'ShareTechMono', color: Colors.grey, fontSize: 12, letterSpacing: 2)),
               const SizedBox(height: 10),
             ],
           ),
@@ -113,20 +110,41 @@ class AnimationScreen extends StatefulWidget {
 class _AnimationScreenState extends State<AnimationScreen> {
   late VideoPlayerController _videoController;
   final AudioPlayer _audioPlayer = AudioPlayer();
+  Timer? _timeoutTimer;
 
   @override
   void initState() {
     super.initState();
-    _videoController = VideoPlayerController.networkUrl(Uri.parse('https://files.catbox.moe/mpgkym.mp4'))
+    
+    // Timer 8 detik biar gak nyangkut
+    _timeoutTimer = Timer(const Duration(seconds: 8), () {
+      _goToMain();
+    });
+
+    // LINK VIDEO BARU
+    _videoController = VideoPlayerController.networkUrl(Uri.parse('https://www.image2url.com/r2/default/videos/1793270666266-a6409dc1-6030-4134-8b64-61cc3d3839b7.mp4'))
       ..initialize().then((_) {
-        setState(() {});
-        _videoController.play();
-        _audioPlayer.setUrl('https://files.catbox.moe/6j232s.mp3').then((_) => _audioPlayer.play());
+        if (mounted) {
+          setState(() {});
+          _videoController.play();
+          // LINK MP3 BARU
+          _audioPlayer.setUrl('https://videotourl.com/audio/1793270826897-e8b6e4cb-3299-4f26-9667-dbafae8354cf.mp3').then((_) => _audioPlayer.play()).catchError((e) {});
+        }
+      }).catchError((error) {
+        _goToMain();
       });
+  }
+
+  void _goToMain() {
+    _timeoutTimer?.cancel();
+    if (mounted) {
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const MainShell()));
+    }
   }
 
   @override
   void dispose() {
+    _timeoutTimer?.cancel();
     _videoController.dispose();
     _audioPlayer.dispose();
     super.dispose();
@@ -146,7 +164,7 @@ class _AnimationScreenState extends State<AnimationScreen> {
             top: 40, right: 20,
             child: SafeArea(
               child: TextButton(
-                onPressed: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const MainShell())),
+                onPressed: _goToMain,
                 child: const Text('SKIP', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
               ),
             ),
@@ -157,7 +175,7 @@ class _AnimationScreenState extends State<AnimationScreen> {
   }
 }
 
-// ================= 4. MAIN SHELL (BOTTOM NAV) =================
+// ================= 4. MAIN SHELL =================
 class MainShell extends StatefulWidget {
   const MainShell({super.key});
   @override
@@ -192,7 +210,7 @@ class _MainShellState extends State<MainShell> {
   }
 }
 
-// ================= 5. CHAT PLACEHOLDER (DENGAN FITUR RULES) =================
+// ================= 5. CHAT PLACEHOLDER =================
 class ChatPlaceholderScreen extends StatelessWidget {
   const ChatPlaceholderScreen({super.key});
 
@@ -210,10 +228,7 @@ class ChatPlaceholderScreen extends StatelessWidget {
             Text('GLOBAL CHAT', style: GoogleFonts.orbitron(fontSize: 24, fontWeight: FontWeight.bold, color: neonCyan)),
             const SizedBox(height: 10),
             const Text('Fitur chat sedang disiapkan oleh Dev.', style: TextStyle(color: Colors.white70)),
-            
             const SizedBox(height: 30),
-
-            // 👇 TOMBOL RULES DENGAN IKON BUKU MODERN 👇
             InkWell(
               onTap: () => _showRules(context),
               borderRadius: BorderRadius.circular(8),
@@ -223,29 +238,20 @@ class ChatPlaceholderScreen extends StatelessWidget {
                   color: surfaceDark,
                   border: Border.all(color: neonCyan.withOpacity(0.5), width: 1.5),
                   borderRadius: BorderRadius.circular(8),
-                  boxShadow: [
-                    BoxShadow(color: neonCyan.withOpacity(0.2), blurRadius: 10, spreadRadius: 1)
-                  ]
+                  boxShadow: [BoxShadow(color: neonCyan.withOpacity(0.2), blurRadius: 10, spreadRadius: 1)]
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     const Icon(Icons.menu_book_rounded, color: neonCyan, size: 24),
                     const SizedBox(width: 10),
-                    Text(
-                      'RULES CHAT',
-                      style: GoogleFonts.orbitron(fontSize: 12, color: neonCyan, fontWeight: FontWeight.bold, letterSpacing: 1.5),
-                    ),
+                    Text('RULES CHAT', style: GoogleFonts.orbitron(fontSize: 12, color: neonCyan, fontWeight: FontWeight.bold, letterSpacing: 1.5)),
                   ],
                 ),
               ),
             ),
-
             const Spacer(),
-            const Text(
-              'Dev AmarAfterDark',
-              style: TextStyle(fontFamily: 'ShareTechMono', color: Colors.grey, fontSize: 12, letterSpacing: 2),
-            ),
+            const Text('Dev AmarAfterDark', style: TextStyle(fontFamily: 'ShareTechMono', color: Colors.grey, fontSize: 12, letterSpacing: 2)),
             const SizedBox(height: 20),
           ],
         ),
@@ -253,7 +259,6 @@ class ChatPlaceholderScreen extends StatelessWidget {
     );
   }
 
-  // Fungsi buat nampilin Pop-up Rules dari bawah
   void _showRules(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -275,10 +280,7 @@ class ChatPlaceholderScreen extends StatelessWidget {
                 children: [
                   const Icon(Icons.menu_book_rounded, color: neonCyan, size: 30),
                   const SizedBox(width: 12),
-                  Text(
-                    'RULES CHATGLOBAL',
-                    style: GoogleFonts.orbitron(fontSize: 18, color: neonCyan, fontWeight: FontWeight.bold),
-                  ),
+                  Text('RULES CHATGLOBAL', style: GoogleFonts.orbitron(fontSize: 18, color: neonCyan, fontWeight: FontWeight.bold)),
                 ],
               ),
               const SizedBox(height: 20),
@@ -292,12 +294,7 @@ class ChatPlaceholderScreen extends StatelessWidget {
                 style: TextStyle(color: Colors.white, height: 1.6, fontSize: 14),
               ),
               const SizedBox(height: 30),
-              Center(
-                child: Text(
-                  'Dev AmarAfterDark',
-                  style: TextStyle(color: Colors.grey[600], fontFamily: 'ShareTechMono', fontSize: 12),
-                ),
-              ),
+              Center(child: Text('Dev AmarAfterDark', style: TextStyle(color: Colors.grey[600], fontFamily: 'ShareTechMono', fontSize: 12))),
               const SizedBox(height: 20),
             ],
           ),
@@ -307,7 +304,7 @@ class ChatPlaceholderScreen extends StatelessWidget {
   }
 }
 
-// ================= 6. TOOLS SCREEN (MAINTENANCE) =================
+// ================= 6. TOOLS SCREEN =================
 class ToolsScreen extends StatelessWidget {
   const ToolsScreen({super.key});
 
@@ -321,22 +318,11 @@ class ToolsScreen extends StatelessWidget {
           children: [
             const Icon(Icons.engineering, size: 80, color: neonMagenta),
             const SizedBox(height: 20),
-            Text(
-              'FITUR INI SEDANG MAINTENANCE',
-              textAlign: TextAlign.center,
-              style: GoogleFonts.orbitron(fontSize: 20, fontWeight: FontWeight.bold, color: neonMagenta),
-            ),
+            Text('FITUR INI SEDANG MAINTENANCE', textAlign: TextAlign.center, style: GoogleFonts.orbitron(fontSize: 20, fontWeight: FontWeight.bold, color: neonMagenta)),
             const SizedBox(height: 10),
-            const Text(
-              'Mohon bersabar. Terima kasih.',
-              textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.white, fontSize: 16),
-            ),
+            const Text('Mohon bersabar. Terima kasih.', textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontSize: 16)),
             const SizedBox(height: 40),
-            const Text(
-              'Dev AmarAfterDark',
-              style: TextStyle(fontFamily: 'ShareTechMono', color: Colors.grey, fontSize: 12, fontStyle: FontStyle.italic, letterSpacing: 2),
-            ),
+            const Text('Dev AmarAfterDark', style: TextStyle(fontFamily: 'ShareTechMono', color: Colors.grey, fontSize: 12, fontStyle: FontStyle.italic, letterSpacing: 2)),
           ],
         ),
       ),
