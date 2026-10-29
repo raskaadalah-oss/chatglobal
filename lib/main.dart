@@ -29,7 +29,6 @@ const starlightPink = Color(0xFFFF6B9E);
 const nebulaBlue = Color(0xFF00B4D8);
 const spaceDark = Color(0xFF05050A);
 const textWhite = Color(0xFFF0F0FF);
-const goldOwner = Color(0xFFFFD700);
 
 // ================= WIDGET BACKGROUND GALAKSI =================
 class CosmicBackground extends StatelessWidget {
@@ -216,7 +215,6 @@ class _GlobalChatScreenState extends State<GlobalChatScreen> {
       ),
       body: Column(
         children: [
-          // Banner Peringatan
           if (_showBanner)
             Container(
               width: double.infinity,
@@ -243,22 +241,18 @@ class _GlobalChatScreenState extends State<GlobalChatScreen> {
               ),
             ),
           
-          // Area Chat
           Expanded(
             child: ListView(
               padding: const EdgeInsets.all(16),
               children: [
-                // Bot Warn 1/3
                 _buildBotMessage(
                   'Chat deleted by moderation\nDETECTED LANGGAR RULE\nDILARANG KIRIM SPAM LINK\n@user_test — warn 1/3',
                 ),
                 const SizedBox(height: 16),
                 
-                // User Chat
                 _buildUserMessage('USER', 'MEMBER', 'Budi', 'Halo bang, mau open order jasa ketik nih!', isReply: false),
                 const SizedBox(height: 16),
 
-                // Bot Warn 3/3
                 _buildBotMessage(
                   'Chat deleted by moderation\nDETECTED LANGGAR RULE\nSPAM CHAT BERULANG\n@spammer — warn 3/3\nMute chat 7 hari (3/3).',
                 ),
@@ -266,7 +260,6 @@ class _GlobalChatScreenState extends State<GlobalChatScreen> {
             ),
           ),
 
-          // Input Chat
           Padding(
             padding: const EdgeInsets.all(12.0),
             child: GlassContainer(
@@ -297,7 +290,6 @@ class _GlobalChatScreenState extends State<GlobalChatScreen> {
     );
   }
 
-  // WIDGET BOT MESSAGE
   Widget _buildBotMessage(String text) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -340,7 +332,6 @@ class _GlobalChatScreenState extends State<GlobalChatScreen> {
     );
   }
 
-  // WIDGET USER MESSAGE
   Widget _buildUserMessage(String role, String badge, String username, String message, {bool isReply = false}) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -385,7 +376,6 @@ class _GlobalChatScreenState extends State<GlobalChatScreen> {
     );
   }
 
-  // ================= RULES MODAL (UPDATE JUALAN DIPERBOLEHKAN) =================
   void _showRules(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -422,7 +412,6 @@ class _GlobalChatScreenState extends State<GlobalChatScreen> {
                         ),
                         const SizedBox(height: 20),
                         
-                        // Box Diperbolehkan (Jualan Masuk Sini)
                         _buildRulesBox(
                           title: 'Diperbolehkan',
                           icon: Icons.check_circle_outline,
@@ -435,7 +424,6 @@ class _GlobalChatScreenState extends State<GlobalChatScreen> {
                           ]
                         ),
 
-                        // Box Dilarang
                         _buildRulesBox(
                           title: 'Dilarang Keras',
                           icon: Icons.cancel_outlined,
@@ -449,7 +437,6 @@ class _GlobalChatScreenState extends State<GlobalChatScreen> {
                           ]
                         ),
 
-                        // Box Moderasi
                         _buildRulesBox(
                           title: 'Moderasi Sistem',
                           icon: Icons.shield_outlined,
@@ -493,4 +480,15 @@ class _GlobalChatScreenState extends State<GlobalChatScreen> {
             children: [
               Icon(icon, color: color, size: 20),
               const SizedBox(width: 8),
-              Text(title, style: TextStyle(color: color, fontWeight: FontWeight.bold, fontS
+              Text(title, style: TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 14)),
+            ],
+          ),
+          const SizedBox(height: 12),
+          ...items.map((e) => Padding(
+            padding: const EdgeInsets.only(bottom: 6),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(Icons.circle, size: 6, color: color.withOpacity(0.7)),
+                const SizedBox(width: 8),
+                Expanded(child: Text(e, style: const TextStyle(color: Colors.white70, 
