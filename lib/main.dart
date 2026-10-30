@@ -23,18 +23,15 @@ class ChatGlobalApp extends StatelessWidget {
   }
 }
 
-// ================= WARNA COSMIC =================
 const cosmicPurple = Color(0xFF9D4EDD);
 const starlightPink = Color(0xFFFF6B9E);
 const nebulaBlue = Color(0xFF00B4D8);
 const spaceDark = Color(0xFF05050A);
 const textWhite = Color(0xFFF0F0FF);
 
-// ================= WIDGET BACKGROUND GALAKSI =================
 class CosmicBackground extends StatelessWidget {
   final Widget child;
   const CosmicBackground({super.key, required this.child});
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -50,13 +47,11 @@ class CosmicBackground extends StatelessWidget {
   }
 }
 
-// ================= WIDGET EFEK KACA =================
 class GlassContainer extends StatelessWidget {
   final Widget child;
   final double padding;
   final Color? borderColor;
   const GlassContainer({super.key, required this.child, this.padding = 20, this.borderColor});
-
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
@@ -69,9 +64,7 @@ class GlassContainer extends StatelessWidget {
             color: Colors.white.withOpacity(0.05),
             borderRadius: BorderRadius.circular(20),
             border: Border.all(color: borderColor ?? Colors.white.withOpacity(0.15), width: 1.5),
-            boxShadow: [
-              BoxShadow(color: (borderColor ?? cosmicPurple).withOpacity(0.2), blurRadius: 20, spreadRadius: 2)
-            ]
+            boxShadow: [BoxShadow(color: (borderColor ?? cosmicPurple).withOpacity(0.2), blurRadius: 20, spreadRadius: 2)]
           ),
           child: child,
         ),
@@ -80,7 +73,6 @@ class GlassContainer extends StatelessWidget {
   }
 }
 
-// ================= 1. LOGIN SCREEN =================
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
   @override
@@ -147,7 +139,6 @@ class LoginScreen extends StatelessWidget {
   }
 }
 
-// ================= 2. MAIN SHELL =================
 class MainShell extends StatefulWidget {
   const MainShell({super.key});
   @override
@@ -182,10 +173,8 @@ class _MainShellState extends State<MainShell> {
   }
 }
 
-// ================= 3. GLOBAL CHAT SCREEN =================
 class GlobalChatScreen extends StatefulWidget {
   const GlobalChatScreen({super.key});
-
   @override
   State<GlobalChatScreen> createState() => _GlobalChatScreenState();
 }
@@ -245,17 +234,11 @@ class _GlobalChatScreenState extends State<GlobalChatScreen> {
             child: ListView(
               padding: const EdgeInsets.all(16),
               children: [
-                _buildBotMessage(
-                  'Chat deleted by moderation\nDETECTED LANGGAR RULE\nDILARANG KIRIM SPAM LINK\n@user_test — warn 1/3',
-                ),
+                _buildBotMessage('Chat deleted by moderation\nDETECTED LANGGAR RULE\nDILARANG KIRIM SPAM LINK\n@user_test — warn 1/3'),
                 const SizedBox(height: 16),
-                
                 _buildUserMessage('USER', 'MEMBER', 'Budi', 'Halo bang, mau open order jasa ketik nih!', isReply: false),
                 const SizedBox(height: 16),
-
-                _buildBotMessage(
-                  'Chat deleted by moderation\nDETECTED LANGGAR RULE\nSPAM CHAT BERULANG\n@spammer — warn 3/3\nMute chat 7 hari (3/3).',
-                ),
+                _buildBotMessage('Chat deleted by moderation\nDETECTED LANGGAR RULE\nSPAM CHAT BERULANG\n@spammer — warn 3/3\nMute chat 7 hari (3/3).'),
               ],
             ),
           ),
@@ -491,4 +474,23 @@ class _GlobalChatScreenState extends State<GlobalChatScreen> {
               children: [
                 Icon(Icons.circle, size: 6, color: color.withOpacity(0.7)),
                 const SizedBox(width: 8),
-                Expanded(child: Text(e, style: const TextStyle(color: Colors.white70, 
+                Expanded(child: Text(e, style: const TextStyle(color: Colors.white70, fontSize: 12, height: 1.4))),
+              ],
+            ),
+          )),
+        ],
+      ),
+    );
+  }
+}
+
+class ToolsScreen extends StatelessWidget {
+  const ToolsScreen({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          children: [
+            Text('MENU TOOLS', style: GoogleFonts.orbitron(fontSize: 24, fontWeight: FontWeig
