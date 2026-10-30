@@ -8,7 +8,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       
@@ -22,21 +21,10 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-          cache: true
           
       - name: Create Android Folder
-        run: flutter create . --platforms android
+        run: flutter create . --org Com.ChatGlobal --project-name byAmar --platforms android
         
-      - name: Fix Package & App Name
-        run: |
-          grep -rl "com.example.chatglobal" android/ | xargs sed -i 's/com.example.chatglobal/Com.ChatGlobal.byAmar/g'
-          grep -rl 'android:label="chatglobal"' android/ | xargs sed -i 's/android:label="chatglobal"/android:label="ChatGlobal V1"/g'
-          
-          mkdir -p android/app/src/main/kotlin/Com/ChatGlobal/byAmar
-          mv android/app/src/main/kotlin/com/example/chatglobal/MainActivity.kt android/app/src/main/kotlin/Com/ChatGlobal/byAmar/MainActivity.kt
-          sed -i 's/package com.example.chatglobal/package Com.ChatGlobal.byAmar/g' android/app/src/main/kotlin/Com/ChatGlobal/byAmar/MainActivity.kt
-          rm -rf android/app/src/main/kotlin/com
-
       - name: Move google-services.json
         run: cp google-services.json android/app/
 
@@ -50,6 +38,10 @@ jobs:
         
       - name: Generate App Icon
         run: dart run flutter_launcher_icons
+        
+      - name: Fix App Name
+        run: |
+          sed -i 's/android:label="byAmar"/android:label="ChatGlobal V1"/g' android/app/src/main/AndroidManifest.xml || true
         
       - name: Build APK
         run: flutter build apk --release
