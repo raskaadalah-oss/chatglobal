@@ -23,8 +23,19 @@ jobs:
           channel: 'stable'
           
       - name: Create Android Folder
-        run: flutter create . --org Com.ChatGlobal --project-name byAmar --platforms android
+        run: flutter create . --platforms android
         
+      - name: Fix Package & App Name
+        run: |
+          sed -i 's/com.example.chatglobal/Com.ChatGlobal.byAmar/g' android/app/build.gradle.kts || true
+          sed -i 's/com.example.chatglobal/Com.ChatGlobal.byAmar/g' android/app/build.gradle || true
+          sed -i 's/com.example.chatglobal/Com.ChatGlobal.byAmar/g' android/app/src/main/AndroidManifest.xml
+          sed -i 's/android:label="chatglobal"/android:label="ChatGlobal V1"/g' android/app/src/main/AndroidManifest.xml
+          
+          mkdir -p android/app/src/main/kotlin/Com/ChatGlobal/byAmar
+          sed 's/package com.example.chatglobal/package Com.ChatGlobal.byAmar/g' android/app/src/main/kotlin/com/example/chatglobal/MainActivity.kt > android/app/src/main/kotlin/Com/ChatGlobal/byAmar/MainActivity.kt
+          rm android/app/src/main/kotlin/com/example/chatglobal/MainActivity.kt
+
       - name: Move google-services.json
         run: cp google-services.json android/app/
 
@@ -38,10 +49,6 @@ jobs:
         
       - name: Generate App Icon
         run: dart run flutter_launcher_icons
-        
-      - name: Fix App Name
-        run: |
-          sed -i 's/android:label="byAmar"/android:label="ChatGlobal V1"/g' android/app/src/main/AndroidManifest.xml || true
         
       - name: Build APK
         run: flutter build apk --release
